@@ -10,25 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Transaction_Analyzer
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NewDBWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class NewDBWindow : Window
     {
-        public MainWindow()
+        public NewDBWindow()
         {
             InitializeComponent();
-        }
-
-        private void NewDBButtonClick(object sender, RoutedEventArgs e)
-        {
-            NewDBWindow newDBWindow = new NewDBWindow();
-            newDBWindow.ShowDialog();
         }
     }
 }

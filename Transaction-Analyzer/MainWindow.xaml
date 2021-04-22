@@ -7,6 +7,21 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label></Label>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+            <Button x:Name="newDBButton"
+                    Click="NewDBButtonClick">Create New Database</Button>
+            <Button x:Name="loadDBButton">Load Existing Database</Button>
+        </StackPanel>
     </Grid>
 </Window>
