@@ -7,9 +7,28 @@
         mc:Ignorable="d"
         Title="NewDBWindow" Height="300" Width="300">
     <Grid>
-        <StackPanel Orientation="Vertical" Margin="10">
-            <TextBox x:Name="newNameTextBox"
-                     Margin="0, 0, 0, 5"/>
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Margin="0,0,0,3"
+                   Grid.Row="1"
+                   Grid.Column="0">Database Name</Label>
+        <TextBox x:Name="newNameTextBox"
+                 Margin="0,5,5,5"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 HorizontalAlignment="Stretch"/>
+        <Button x:Name="createButton"
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="50,10"
+                Click="CreateButtonClick">Create</Button>
     </Grid>
 </Window>

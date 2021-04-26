@@ -19,9 +19,29 @@ namespace Transaction_Analyzer
     /// </summary>
     public partial class NewDBWindow : Window
     {
+        private static string databaseName;
+        public static string DatabaseName
+        {
+            get { return databaseName; }
+        }
+        private static string fileName;
+        public static string FileName
+        {
+            get { return fileName; }
+        }
         public NewDBWindow()
         {
             InitializeComponent();
+        }
+
+        private void CreateButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (newNameTextBox.Text != "" || newNameTextBox != null)
+            {
+                databaseName = newNameTextBox.Text.Replace(" ", "_");
+                fileName = null;
+            }
+            Close();
         }
     }
 }

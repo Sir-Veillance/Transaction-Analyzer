@@ -20,6 +20,16 @@ namespace Transaction_Analyzer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static string databaseName;
+        public static string DatabaseName
+        {
+            get { return databaseName; }
+        }
+        private static string fileName;
+        public static string FileName
+        {
+            get { return fileName; }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -27,8 +37,23 @@ namespace Transaction_Analyzer
 
         private void NewDBButtonClick(object sender, RoutedEventArgs e)
         {
-            NewDBWindow newDBWindow = new NewDBWindow();
+            NewDBWindow newDBWindow = new();
             newDBWindow.ShowDialog();
+            databaseName = NewDBWindow.DatabaseName;
+        }
+
+        private void LoadDBButtonClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog fileDialog = new();
+            fileDialog.DefaultExt = ".csv";
+            fileDialog.Filter = "CSV Files (*.csv)|*.csv";
+
+            Nullable<bool> result = fileDialog.ShowDialog();
+            if (result == true)
+            {
+                fileName = fileDialog.FileName;
+                loadDBButton.Content = fileName;
+            }
         }
     }
 }

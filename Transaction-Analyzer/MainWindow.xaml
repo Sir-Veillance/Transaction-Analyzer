@@ -20,8 +20,10 @@
         <Label></Label>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <Button x:Name="newDBButton"
+                    Margin="0,0,0,5"
                     Click="NewDBButtonClick">Create New Database</Button>
-            <Button x:Name="loadDBButton">Load Existing Database</Button>
+            <Button x:Name="loadDBButton"
+                    Click="LoadDBButtonClick">Load Existing Database</Button>
         </StackPanel>
     </Grid>
 </Window>
