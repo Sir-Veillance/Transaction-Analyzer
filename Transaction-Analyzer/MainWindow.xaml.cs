@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MySql.Data.MySqlClient;
 
 namespace Transaction_Analyzer
 {
@@ -38,8 +39,24 @@ namespace Transaction_Analyzer
         private void NewDBButtonClick(object sender, RoutedEventArgs e)
         {
             NewDBWindow newDBWindow = new();
+            this.Opacity = 0.5;
             newDBWindow.ShowDialog();
+            this.Opacity = 1.0;
             databaseName = NewDBWindow.DatabaseName;
+
+            // TODO: Hardcoded login info, could obviously be replaced with a better system
+            MySqlConnection conn = new("Server=localhost;Database=" + databaseName + ";port=3306;User Id=bmckay;password=!DatabasesUser2");
+
+            AnalyzerMenu menu = new(conn);
+            this.Opacity = 0.5;
+            menu.ShowDialog();
+            this.Opacity = 1.0;
+
+            // string query = "SELECT * FROM pc";
+            // MySqlCommand cmd = new(query, conn);
+            // MySqlDataReader dataReader = cmd.ExecuteReader();
+            // dataReader.Read();
+            // loadDBButton.Content = dataReader["model"];
         }
 
         private void LoadDBButtonClick(object sender, RoutedEventArgs e)
