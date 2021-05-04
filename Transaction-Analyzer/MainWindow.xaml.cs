@@ -26,14 +26,26 @@ namespace Transaction_Analyzer
         {
             get { return databaseName; }
         }
-        private static string fileName;
-        public static string FileName
-        {
-            get { return fileName; }
-        }
         public MainWindow()
         {
             InitializeComponent();
+            LoadAvailableDatabases();
+        }
+
+        private void LoadAvailableDatabases()
+        {
+            databaseDropdown.Items.Clear();
+            MySqlConnection databasesConnection = new("Server=localhost;port=3306;database=transaction_databases;uid=bmckay;password=!DatabasesUser2");
+            databasesConnection.Open();
+            string dbquery = "SELECT * FROM dbnames;";
+            MySqlCommand getDatabasesCommand = new(dbquery, databasesConnection);
+            MySqlDataReader databaseReader = getDatabasesCommand.ExecuteReader();
+            while (databaseReader.Read())
+            {
+                databaseDropdown.Items.Add(databaseReader.GetString("name"));
+            }
+            databaseReader.Close();
+            databasesConnection.Close();
         }
 
         private void NewDBButtonClick(object sender, RoutedEventArgs e)
@@ -83,6 +95,7 @@ namespace Transaction_Analyzer
                         "Price FLOAT," +
                         "Type CHAR(1)" +
                         ");";
+
                 MySqlCommand tableCreationCommand = new(query, conn);
                 tableCreationCommand.ExecuteNonQuery();
 
@@ -96,6 +109,7 @@ namespace Transaction_Analyzer
                         "Strike FLOAT," +
                         "Expire DATE" +
                         ");";
+
                 tableCreationCommand = new(query, conn);
                 tableCreationCommand.ExecuteNonQuery();
 
@@ -105,6 +119,7 @@ namespace Transaction_Analyzer
                         "Quantity FLOAT," +
                         "RemovalDate DATE" +
                         ");";
+
                 tableCreationCommand = new(query, conn);
                 tableCreationCommand.ExecuteNonQuery();
 
@@ -112,12 +127,15 @@ namespace Transaction_Analyzer
                         "Symbol VARCHAR(5) PRIMARY KEY," +
                         "Name VARCHAR(5)" +
                         ");";
+
                 tableCreationCommand = new(query, conn);
                 tableCreationCommand.ExecuteNonQuery();
 
                 AnalyzerMenu menu = new(conn);
                 this.Opacity = 0.5;
                 menu.ShowDialog();
+                conn.Close();
+                LoadAvailableDatabases();
                 this.Opacity = 1.0;
             }
 
@@ -130,15 +148,29 @@ namespace Transaction_Analyzer
 
         private void LoadDBButtonClick(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog fileDialog = new();
-            fileDialog.DefaultExt = ".csv";
-            fileDialog.Filter = "CSV Files (*.csv)|*.csv";
-
-            Nullable<bool> result = fileDialog.ShowDialog();
-            if (result == true)
+            if (databaseDropdown.SelectedItem != null)
             {
-                fileName = fileDialog.FileName;
-                loadDBButton.Content = fileName;
+                databaseName = databaseDropdown.SelectedItem.ToString();
+            } else
+            {
+                databaseName = null;
+            }
+
+            if (databaseName != null)
+            {
+                MySqlConnection conn = new("Server=localhost;port=3306;database=" + databaseName + ";uid=bmckay;password=!DatabasesUser2");
+                conn.Open();
+                AnalyzerMenu menu = new(conn);
+                this.Opacity = 0.5;
+                menu.ShowDialog();
+                conn.Close();
+                this.Opacity = 1.0;
+            } else
+            {
+                MessageBox.Show("Please select a database to load from the dropdown menu.",
+                                "Confirmation",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Exclamation);
             }
         }
     }

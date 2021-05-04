@@ -28,7 +28,15 @@ namespace Transaction_Analyzer
 
         private void ImportButtonClick(object sender, RoutedEventArgs e)
         {
+            Microsoft.Win32.OpenFileDialog fileDialog = new();
+            fileDialog.DefaultExt = ".csv";
+            fileDialog.Filter = "CSV Files (*.csv)|*.csv";
 
+            Nullable<bool> result = fileDialog.ShowDialog();
+            if (result == true)
+            {
+                string csvFile = fileDialog.FileName;
+            }
         }
 
         private void ManualButtonClick(object sender, RoutedEventArgs e)
