@@ -106,6 +106,7 @@ namespace Transaction_Analyzer
                         "Quantity FLOAT," +
                         "Price FLOAT," +
                         "Type CHAR(1)," +
+                        "OptionType CHAR(1)," +
                         "Strike FLOAT," +
                         "Expire DATE" +
                         ");";
@@ -125,13 +126,33 @@ namespace Transaction_Analyzer
 
                 query = "CREATE TABLE Company (" +
                         "Symbol VARCHAR(5) PRIMARY KEY," +
-                        "Name VARCHAR(5)" +
+                        "Name VARCHAR(50)" +
                         ");";
 
                 tableCreationCommand = new(query, conn);
                 tableCreationCommand.ExecuteNonQuery();
 
-                AnalyzerMenu menu = new(conn);
+                query = "CREATE TABLE Dividend (" +
+                        "TransactionID BIGINT PRIMARY KEY," +
+                        "Symbol VARCHAR(5)," +
+                        "TransactDate DATE," +
+                        "Quantity FLOAT" +
+                        ");";
+
+                tableCreationCommand = new(query, conn);
+                tableCreationCommand.ExecuteNonQuery();
+
+                query = "CREATE TABLE Historical_Price (" +
+                        "Symbol VARCHAR(5) PRIMARY KEY," +
+                        "Price FLOAT," +
+                        "HistoricDate DATE" +
+                        ");";
+
+                tableCreationCommand = new(query, conn);
+                tableCreationCommand.ExecuteNonQuery();
+
+                AnalyzerMenu menu = new();
+                AnalyzerMenu.Conn = conn;
                 this.Opacity = 0.5;
                 menu.ShowDialog();
                 conn.Close();
@@ -160,7 +181,8 @@ namespace Transaction_Analyzer
             {
                 MySqlConnection conn = new("Server=localhost;port=3306;database=" + databaseName + ";uid=bmckay;password=!DatabasesUser2");
                 conn.Open();
-                AnalyzerMenu menu = new(conn);
+                AnalyzerMenu menu = new();
+                AnalyzerMenu.Conn = conn;
                 this.Opacity = 0.5;
                 menu.ShowDialog();
                 conn.Close();
