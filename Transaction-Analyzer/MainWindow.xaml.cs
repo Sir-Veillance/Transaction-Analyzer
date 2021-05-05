@@ -71,6 +71,7 @@ namespace Transaction_Analyzer
                                                                  "Confirmation",
                                                                  MessageBoxButton.OK,
                                                                  MessageBoxImage.Exclamation);
+                dataReader.Close();
             } else
             {
                 dataReader.Close();

@@ -36,6 +36,9 @@
             <Button x:Name="analysisButton"
                     Margin="10,0,10,5"
                     Click="AnalysisButtonClick">Analysis</Button>
+            <Button x:Name="exportButton"
+                    Margin="10,0,10,5"
+                    Click="ExportButtonClick">Export Data</Button>
         </StackPanel>
         <Button x:Name="returnButton"
                 Grid.Column="1"

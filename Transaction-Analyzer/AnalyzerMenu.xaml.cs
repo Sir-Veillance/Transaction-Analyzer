@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MySql.Data.MySqlClient;
+using System.Xml;
+using System.Data;
 
 namespace Transaction_Analyzer
 {
@@ -137,7 +139,7 @@ namespace Transaction_Analyzer
                     // handling line
                     if (type == "stock")
                     {
-                        query = "INSERT INTO Stock_Transaction " +
+                        query = "INSERT IGNORE INTO Stock_Transaction " +
                                 "VALUES (" +
                                 transactionID + ",'" +
                                 symbol + "','" +
@@ -217,7 +219,7 @@ namespace Transaction_Analyzer
                         string year = splitDescription[5];
                         
 
-                        query = "INSERT INTO Option_Transaction " +
+                        query = "INSERT IGNORE INTO Option_Transaction " +
                                 "VALUES (" +
                                 transactionID + ",'" +
                                 symbol + "','" +
@@ -244,7 +246,38 @@ namespace Transaction_Analyzer
                                 MessageBoxButton.OK,
                                 MessageBoxImage.Exclamation);
             }
-            
+
+            // search for new symbols to generate new companies
+            string companyQuery = "SELECT Symbol " +
+                                  "FROM Stock_Transaction " +
+                                  "UNION " +
+                                  "SELECT Symbol " +
+                                  "FROM Option_Transaction;";
+
+            MySqlCommand grabCompaniesCommand = new(companyQuery, conn);
+
+            // datareader will return a boolean value of whether it found an existing database with the provided name
+            MySqlDataReader companyReader = grabCompaniesCommand.ExecuteReader();
+            string companyInsertQuery;
+            List<string> allSymbols = new();
+            while (companyReader.Read())
+            {
+                allSymbols.Add(companyReader.GetString("Symbol"));
+            }
+
+            companyReader.Close();
+
+            foreach (string companySymbol in allSymbols)
+            {
+                companyInsertQuery = "INSERT IGNORE INTO Company " +
+                                     "VALUES (" +
+                                     "'" + companySymbol + "'," +
+                                     "NULL" +
+                                     ");";
+
+                MySqlCommand companyInsertCommand = new(companyInsertQuery, conn);
+                companyInsertCommand.ExecuteNonQuery();
+            }
         }
 
         private void ManualButtonClick(object sender, RoutedEventArgs e)
@@ -265,6 +298,22 @@ namespace Transaction_Analyzer
         private void ReturnButtonClick(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void ExportButtonClick(object sender, RoutedEventArgs e)
+        {
+            string query = "SELECT * FROM Stock_Transaction;";
+            MySqlDataAdapter dataAdapter = new(query, conn);
+            DataSet dataSet = new();
+            dataAdapter.Fill(dataSet);
+            dataSet.Tables[0].WriteXml(@"C:\Users\Benjamin\Desktop\stock.xml");
+            //dataSet.Tables[0].WriteXml(@"\%userprofile%\Desktop");
+
+            query = "SELECT * FROM Option_Transaction;";
+            dataAdapter = new(query, conn);
+            dataSet = new();
+            dataAdapter.Fill(dataSet);
+            dataSet.Tables[0].WriteXml(@"C:\Users\Benjamin\Desktop\option.xml");
         }
     }
 }
